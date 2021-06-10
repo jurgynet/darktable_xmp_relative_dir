@@ -1,5 +1,3 @@
-Only in darktable-2.6.0-patched/: AL_DID.sh
-Only in darktable-2.6.0-patched/: build
 diff -rc darktable-2.6.0/src/common/image.c darktable-2.6.0-patched/src/common/image.c
 *** darktable-2.6.0/src/common/image.c	2018-12-24 03:31:27.000000000 -0600
 --- darktable-2.6.0-patched/src/common/image.c	2019-01-01 18:43:19.172969263 -0600
