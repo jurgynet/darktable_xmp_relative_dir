@@ -17,10 +17,11 @@ Synopsys:
 * In your home/.config/darktable/ directory...
 * Add this option:  xmp_relative_dir=xmp
 * IE like this:  echo xmp_relative_dir=xmp >>darktablerc
-* Now create a xmp sub-directory just before you import a new file of photos
-* Or in existing dirs, create the sub-dir and move the .xmp files into the sub-dir 
+* Now create a xmp sub-directory just before you import a new directory of photos
+* Or in existing dirs, create the sub-dir and move the .xmp files into the sub-dir named xmp 
 
 Note:
 -----
 * Take backups before you try any of this. Backups of your image dirs and/or xmp files.
 * Not responsibile for any file losses or corruption.
+* I have been using this patch successfully for the last three years
