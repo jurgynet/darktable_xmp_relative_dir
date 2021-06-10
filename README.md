@@ -24,4 +24,4 @@ Note:
 -----
 * Take backups before you try any of this. Backups of your image dirs and/or xmp files.
 * Not responsibile for any file losses or corruption.
-* I have been using this patch successfully for the last three years
+* I have been using this patch successfully on LINUX for the last three years
