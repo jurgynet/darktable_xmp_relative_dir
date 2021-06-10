@@ -19,3 +19,8 @@ Synopsys:
 * IE like this:  echo xmp_relative_dir=xmp >>darktablerc
 * Now create a xmp sub-directory just before you import a new file of photos
 * Or in existing dirs, create the sub-dir and move the .xmp files into the sub-dir 
+
+Note:
+-----
+* Take backups before you try any of this. Backups of your image dirs and/or xmp files.
+* Not responsibile for any file losses or corruption.
