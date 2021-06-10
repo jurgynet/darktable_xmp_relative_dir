@@ -1,0 +1,180 @@
+Only in darktable-2.6.0-patched/: AL_DID.sh
+Only in darktable-2.6.0-patched/: build
+diff -rc darktable-2.6.0/src/common/image.c darktable-2.6.0-patched/src/common/image.c
+*** darktable-2.6.0/src/common/image.c	2018-12-24 03:31:27.000000000 -0600
+--- darktable-2.6.0-patched/src/common/image.c	2019-01-01 18:43:19.172969263 -0600
+***************
+*** 219,224 ****
+--- 219,234 ----
+      // finally check if we have a .xmp for the local copy. If no modification done on the local copy it is safe
+      // to remove.
+      g_strlcat(pathname, ".xmp", sizeof(pathname));
++     // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++     char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++     if(!g_file_test(pathname, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++       gchar *ptr = pathname + strlen(pathname);
++       while(*ptr != '/') ptr--;
++       ptr++;
++       char *xmpfilename = g_strdup(ptr);
++       g_snprintf(ptr, sizeof(pathname), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++       g_free(xmpfilename);
++     } // end patch
+      return !g_file_test(pathname, G_FILE_TEST_EXISTS);
+    }
+  }
+***************
+*** 1095,1100 ****
+--- 1105,1120 ----
+    g_strlcpy(dtfilename, normalized_filename, sizeof(dtfilename));
+    // dt_image_path_append_version(id, dtfilename, sizeof(dtfilename));
+    g_strlcat(dtfilename, ".xmp", sizeof(dtfilename));
++   // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++   char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++   if(!g_file_test(dtfilename, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++     gchar *ptr = dtfilename + strlen(dtfilename);
++     while(*ptr != '/') ptr--;
++     ptr++;
++     char *xmpfilename = g_strdup(ptr);
++     g_snprintf(ptr, sizeof(dtfilename), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++     g_free(xmpfilename);
++   } // end patch
+  
+    int res = dt_exif_xmp_read(img, dtfilename, 0);
+  
+***************
+*** 1286,1292 ****
+--- 1306,1332 ----
+          dt_image_path_append_version(id, oldxmp, sizeof(oldxmp));
+          dt_image_path_append_version(id, newxmp, sizeof(newxmp));
+          g_strlcat(oldxmp, ".xmp", sizeof(oldxmp));
++         // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++         char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++         if(!g_file_test(oldxmp, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++           gchar *ptr = oldxmp + strlen(oldxmp);
++           while(*ptr != '/') ptr--;
++           ptr++;
++           char *xmpfilename = g_strdup(ptr);
++           g_snprintf(ptr, sizeof(oldxmp), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++           g_free(xmpfilename);
++         } // end patch
+          g_strlcat(newxmp, ".xmp", sizeof(newxmp));
++         // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++         xmp_dir = dt_conf_get_string("xmp_relative_dir");
++         if(!g_file_test(newxmp, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++           gchar *ptr = newxmp + strlen(newxmp);
++           while(*ptr != '/') ptr--;
++           ptr++;
++           char *xmpfilename = g_strdup(ptr);
++           g_snprintf(ptr, sizeof(newxmp), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++           g_free(xmpfilename);
++         } // end patch
+  
+          GFile *goldxmp = g_file_new_for_path(oldxmp);
+          GFile *gnewxmp = g_file_new_for_path(newxmp);
+***************
+*** 1619,1624 ****
+--- 1659,1674 ----
+    dt_image_full_path(imgid, locppath, sizeof(locppath), &from_cache);
+    dt_image_path_append_version(imgid, locppath, sizeof(locppath));
+    g_strlcat(locppath, ".xmp", sizeof(locppath));
++   // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++   char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++   if(!g_file_test(locppath, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++    gchar *ptr = locppath + strlen(locppath);
++    while(*ptr != '/') ptr--;
++     ptr++;
++     char *xmpfilename = g_strdup(ptr);
++     g_snprintf(ptr, sizeof(locppath), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++     g_free(xmpfilename);
++   } // end patch
+  
+    // a local copy exists, but the original is not accessible
+  
+***************
+*** 1655,1660 ****
+--- 1705,1721 ----
+      // delete xmp if any
+      dt_image_path_append_version(imgid, locppath, sizeof(locppath));
+      g_strlcat(locppath, ".xmp", sizeof(locppath));
++     // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++     char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++     if(!g_file_test(locppath, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++       gchar *ptr = locppath + strlen(locppath);
++       while(*ptr != '/') ptr--;
++       ptr++;
++       char *xmpfilename = g_strdup(ptr);
++       g_snprintf(ptr, sizeof(locppath), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++       g_free(xmpfilename);
++     } // end patch
++ 
+      dest = g_file_new_for_path(locppath);
+  
+      if(g_file_test(locppath, G_FILE_TEST_EXISTS)) g_file_delete(dest, NULL, NULL);
+***************
+*** 1699,1704 ****
+--- 1760,1775 ----
+  
+      dt_image_path_append_version(imgid, filename, sizeof(filename));
+      g_strlcat(filename, ".xmp", sizeof(filename));
++     // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++     char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++     if(!g_file_test(filename, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++       gchar *ptr = filename + strlen(filename);
++       while(*ptr != '/') ptr--;
++       ptr++;
++       char *xmpfilename = g_strdup(ptr);
++       g_snprintf(ptr, sizeof(filename), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++       g_free(xmpfilename);
++     } // end patch
+  
+      if(!dt_exif_xmp_write(imgid, filename))
+      {
+Only in darktable-2.6.0-patched/src/common: image.c.orig
+Only in darktable-2.6.0-patched/src/common: image.c.rej
+diff -rc darktable-2.6.0/src/control/crawler.c darktable-2.6.0-patched/src/control/crawler.c
+*** darktable-2.6.0/src/control/crawler.c	2018-12-24 03:31:27.000000000 -0600
+--- darktable-2.6.0-patched/src/control/crawler.c	2019-01-01 18:36:33.165094573 -0600
+***************
+*** 92,97 ****
+--- 92,107 ----
+        xmp_path[len++] = 'm';
+        xmp_path[len++] = 'p';
+        xmp_path[len] = '\0';
++       // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++       char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++       if(!g_file_test(xmp_path, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++         gchar *ptr = xmp_path + strlen(xmp_path);
++         while(*ptr != '/') ptr--;
++         ptr++;
++         char *xmpfilename = g_strdup(ptr);
++         g_snprintf(ptr, sizeof(xmp_path), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++         g_free(xmpfilename);
++       } // end patch
+  
+        struct stat statbuf;
+        if(stat(xmp_path, &statbuf) == -1) continue; // TODO: shall we report these?
+Only in darktable-2.6.0-patched/src/control: crawler.c.orig
+diff -rc darktable-2.6.0/src/lua/image.c darktable-2.6.0-patched/src/lua/image.c
+*** darktable-2.6.0/src/lua/image.c	2018-12-24 03:31:27.000000000 -0600
+--- darktable-2.6.0-patched/src/lua/image.c	2019-01-01 18:36:33.165094573 -0600
+***************
+*** 116,121 ****
+--- 116,133 ----
+    dt_image_full_path(my_image->id, filename, sizeof(filename), &from_cache);
+    dt_image_path_append_version(my_image->id, filename, sizeof(filename));
+    g_strlcat(filename, ".xmp", sizeof(filename));
++   // If no .xmp file found and xmp_dir is in conf, look for xmp there:
++   char *xmp_dir = dt_conf_get_string("xmp_relative_dir");
++   if(!g_file_test(filename, G_FILE_TEST_EXISTS) && xmp_dir != NULL && strlen(xmp_dir) > 0) {
++     gchar *ptr = filename + strlen(filename);
++     while(*ptr != '/') ptr--;
++     ptr++;
++     char *xmpfilename = g_strdup(ptr);
++     g_snprintf(ptr, sizeof(filename), "%s%c%s", xmp_dir, G_DIR_SEPARATOR, xmpfilename);
++     g_free(xmpfilename);
++   } // end patch
++ 
++ 
+    lua_pushstring(L, filename);
+    releasereadimage(L, my_image);
+    return 1;
